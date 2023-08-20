@@ -47,4 +47,5 @@ Temporary Items
 *.tgz
 *__debug_bin
 .vscode/
+appsettings.json
 
