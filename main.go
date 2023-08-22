@@ -5,9 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"log"
 	"os"
-	"fmt"
 	"os/signal"
-	"strings"
 )
 
 type appSettings struct {
@@ -28,41 +26,48 @@ func main() {
 		log.Fatal("Error parsing JSON:", err)
 		return
 	}
-	s, err := discordgo.New("Bot " + config.Token)
+	s, _ := discordgo.New("Bot " + config.Token)
+	_, err = s.ApplicationCommandBulkOverwrite(config.AppId, config.SupergoonGamesServerId, []*discordgo.ApplicationCommand{
+		{
+			Name:        "hello-world",
+			Description: "Showcase of a basic slash command",
+		},
+	})
 	if err != nil {
-		log.Fatal("Error creating session: ", err)
+		// Handle the error
 	}
-	s.AddHandler(newMessage)
-
-	 // open session
-	 err = s.Open()
-	 if err != nil {
-		log.Fatal("Error opening websocket connection: ", err)
-	 }
-	 defer s.Close() // close session, after function termination
-	 fmt.Println("Bot running....")
-	 c := make(chan os.Signal, 1)
-	 signal.Notify(c, os.Interrupt)
-	 <-c
-}
-
-	func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
-
-		/* prevent bot responding to its own message
-		this is achived by looking into the message author id
-		if message.author.id is same as bot.author.id then just return
-		*/
-		if message.Author.ID == discord.State.User.ID {
-		 return
+	s.AddHandler(func(
+		s *discordgo.Session,
+		i *discordgo.InteractionCreate,
+	) {
+		data := i.ApplicationCommandData()
+		switch data.Name {
+		case "hello-world":
+			err := s.InteractionRespond(
+				i.Interaction,
+				&discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "Hello world!",
+					},
+				},
+			)
+			if err != nil {
+				// Handle the error
+			}
 		}
+	})
+	err = s.Open()
+	if err != nil {
+		// Handle the error
+	}
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
+	log.Println("Press Ctrl+C to exit")
+	<-stop
 
-		// respond to user message if it contains `!help` or `!bye`
-		switch {
-		case strings.Contains(message.Content, "!help"):
-		 discord.ChannelMessageSend(message.ChannelID, "Hello World😃")
-		case strings.Contains(message.Content, "!bye"):
-		 discord.ChannelMessageSend(message.ChannelID, "Good Bye👋")
-		 // add more cases if required
-		}
-
+	err = s.Close()
+	if err != nil {
+		// Handle the error
+	}
 }
