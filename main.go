@@ -7,12 +7,14 @@ import (
 	"os/signal"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/kjblanchard/sggDiscordBot/github"
 )
 
 type appSettings struct {
 	Token                  string `json:"token"`
 	AppId                  string `json:"appId"`
 	SupergoonGamesServerId string `json:"supergoonGamesServerId"`
+	GithubAccessToken      string `json:"github_access_token"`
 }
 
 func main() {
@@ -28,6 +30,7 @@ func main() {
 		return
 	}
 	s, _ := discordgo.New("Bot " + config.Token)
+	github.InitializeGithub(config.GithubAccessToken)
 	_, err = s.ApplicationCommandBulkOverwrite(config.AppId, config.SupergoonGamesServerId, []*discordgo.ApplicationCommand{
 		{
 			Name:        "check-repos",
@@ -65,16 +68,23 @@ func main() {
 		case "check-repos":
 			roles := i.Member.Roles
 
+			github.GetAllRepos()
+
 			for _, role := range roles {
 				log.Print(role)
-
 			}
 			err := s.InteractionRespond(
 				i.Interaction,
 				&discordgo.InteractionResponse{
 					Type: discordgo.InteractionResponseChannelMessageWithSource,
 					Data: &discordgo.InteractionResponseData{
-						Content: "I should be checking the repos huh",
+						Content: "Heres a list of all of Kevins Repos..",
+						Embeds: []*discordgo.MessageEmbed{
+							{
+								Title: "Repo",
+							},
+
+						},
 					},
 				},
 			)
