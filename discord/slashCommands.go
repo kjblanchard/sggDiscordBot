@@ -46,14 +46,31 @@ func AddCheckReposSlashCommand() {
 				},
 			}
 		}
+		// err := s.InteractionRespond(
+		// 	i.Interaction,
+		// 	&discordgo.InteractionResponse{
+		// 		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		// 		Data: response},
+		// )
+		// if err != nil {
+		// 	log.Fatal("Error responding", err)
+		// }
 		err := s.InteractionRespond(
 			i.Interaction,
 			&discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
 				Data: response},
 		)
 		if err != nil {
-			log.Fatal("Error responding", err)
+			log.Print("Error defering", err)
+		}
+
+		_ , err = s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
+			Content: &response.Content,
+			Embeds: &response.Embeds,
+		})
+		if err != nil {
+			log.Print("Error responding", err)
 		}
 	})
 }
