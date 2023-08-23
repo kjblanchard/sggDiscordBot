@@ -2,28 +2,15 @@ package discord
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/kjblanchard/sggDiscordBot/goonGithub"
+	"github.com/kjblanchard/sggDiscordBot/discord/slashCommands"
 	"log"
 )
 
-var (
-	allApplicationCommands []*discordgo.ApplicationCommand
-)
-
-func CheckIfUserInRole(roleToCheckFor string, roles []string) bool {
-	for _, role := range roles {
-		if role == roleToCheckFor {
-			return true
-		}
-	}
-	return false
-}
-
-
 
 func AddAllSlashCommands() {
-	AddHelloWorldSlashCommand()
-	AddCheckReposSlashCommand()
+	var allApplicationCommands []*discordgo.ApplicationCommand
+	allApplicationCommands = slashCommands.AddHelloWorldSlashCommand(s, allApplicationCommands)
+	allApplicationCommands = slashCommands.AddCheckReposSlashCommand(s, allApplicationCommands)
 	_, err := s.ApplicationCommandBulkOverwrite(discordApplicationId, supergoonGamesServerId, allApplicationCommands)
 	if err != nil {
 		log.Fatal("Error adding application commands", err)

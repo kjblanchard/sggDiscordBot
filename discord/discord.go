@@ -9,7 +9,6 @@ var (
 	s                      *discordgo.Session
 	discordApplicationId   string
 	supergoonGamesServerId string
-	sysopRoleId = "907314874101665823"
 )
 
 func InitializeDiscord(token string, appId string, supergoonServerId string) {

@@ -1,17 +1,26 @@
-package discord
+package slashCommands
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/kjblanchard/sggDiscordBot/goonGithub"
 	"log"
 )
 
-func AddCheckReposSlashCommand(session *discordgo.Session, commands []*discordgo.ApplicationCommand) []*discordgo.ApplicationCommand {
-	command := &discordgo.ApplicationCommand{
-		Name:        "check-repos",
-		Description: "Checks to see all of the repos available",
+var (
+	sysopRoleId = "907314874101665823"
+)
+
+func CheckIfUserInRole(roleToCheckFor string, roles []string) bool {
+	for _, role := range roles {
+		if role == roleToCheckFor {
+			return true
+		}
 	}
-	command = append(command, command)
-	s.AddHandler(func(
+	return false
+}
+
+func AddCheckReposSlashCommand(session *discordgo.Session, commands []*discordgo.ApplicationCommand) []*discordgo.ApplicationCommand {
+	session.AddHandler(func(
 		s *discordgo.Session,
 		i *discordgo.InteractionCreate,
 	) {
@@ -42,12 +51,17 @@ func AddCheckReposSlashCommand(session *discordgo.Session, commands []*discordgo
 			if err != nil {
 				log.Print("Error defering", err)
 			}
-			go getReposAndRespondToInteraction(i.Interaction)
+			go getReposAndRespondToInteraction(i.Interaction, session)
 		}
 	})
+	command := &discordgo.ApplicationCommand{
+		Name:        "check-repos",
+		Description: "Checks to see all of the repos available",
+	}
+	return append(commands, command)
 }
 
-func getReposAndRespondToInteraction(interaction *discordgo.Interaction) {
+func getReposAndRespondToInteraction(interaction *discordgo.Interaction, session *discordgo.Session) {
 	repos := goonGithub.GetAllRepos()
 	field := []*discordgo.MessageEmbedField{}
 	for _, repo := range repos {
@@ -64,7 +78,7 @@ func getReposAndRespondToInteraction(interaction *discordgo.Interaction) {
 		Fields: field,
 	}
 	embeds := []*discordgo.MessageEmbed{embed}
-	_, err := s.InteractionResponseEdit(interaction, &discordgo.WebhookEdit{
+	_, err := session.InteractionResponseEdit(interaction, &discordgo.WebhookEdit{
 		Content: &content,
 		Embeds:  &embeds,
 	})
