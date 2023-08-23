@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/kjblanchard/sggDiscordBot/github"
+	"github.com/kjblanchard/sggDiscordBot/goonGithub"
 	"github.com/kjblanchard/sggDiscordBot/discord"
 )
 
@@ -13,7 +13,7 @@ import (
 func main() {
 	initializeAppSettings()
 	discord.InitializeDiscord(applicationSettings.Token, applicationSettings.AppId, applicationSettings.SupergoonGamesServerId)
-	github.InitializeGithub(applicationSettings.GithubAccessToken)
+	goonGithub.InitializeGithub(applicationSettings.GithubAccessToken)
 	discord.AddAllSlashCommands()
 	discord.OpenDiscordWebsocketConnection()
 	stop := make(chan os.Signal, 1)

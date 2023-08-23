@@ -1,19 +1,17 @@
-package github
+package goonGithub
 
 import (
 	"log"
+	"github.com/google/go-github/v39/github"
+
 )
 
 
-func GetAllRepos() {
+func GetAllRepos() []*github.Repository {
 
 	repos, _, err := githubClient.Repositories.List(ctx, "kjblanchard", nil)
 	if err != nil {
 		log.Printf("Error listing repositories: Error %s", err)
 	}
-
-	for _, repo := range repos {
-		log.Printf("Repo id is %d and name is %s ", repo.ID, *repo.Name)
-	}
-
+	return repos
 }
