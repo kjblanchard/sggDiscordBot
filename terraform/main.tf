@@ -11,14 +11,14 @@ module "sg_discord_bot_deployment" {
   ]
 }
 module "sg_discord_bot_service" {
-  source          = "./modules/service"
-  service_name      = "discord-bot-service"
-  service_selector       = "discord-bot"
-  service_type = "ClusterIP"
+  source           = "./modules/service"
+  service_name     = "discord-bot-service"
+  service_selector = "discord-bot"
+  service_type     = "ClusterIP"
   ports = [
     {
       port = 80
-      name           = "http"
+      name = "http"
     }
   ]
 }

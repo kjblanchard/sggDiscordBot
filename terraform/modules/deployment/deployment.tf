@@ -21,10 +21,10 @@ resource "kubernetes_deployment" "k8s_deployment" {
       spec {
         container {
           image = "${var.image_name}:${var.image_tag}"
-          name  = "${var.deployment_name}"
-        #   port {
-        #     container_port = "${var.container_port}"
-        #   }
+          name  = var.deployment_name
+          #   port {
+          #     container_port = "${var.container_port}"
+          #   }
           dynamic "port" {
             for_each = var.ports
             content {
@@ -42,16 +42,16 @@ resource "kubernetes_deployment" "k8s_deployment" {
             }
           }
         }
-      dynamic "volume" {
-        for_each = var.volume_host_path
-        content {
-          host_path {
-            path = volume.value.path_on_node
-            type = lookup(volume.value, "type", null)
+        dynamic "volume" {
+          for_each = var.volume_host_path
+          content {
+            host_path {
+              path = volume.value.path_on_node
+              type = lookup(volume.value, "type", null)
+            }
+            name = volume.value.volume_name
           }
-          name = volume.value.volume_name
         }
-      }
       }
     }
   }
