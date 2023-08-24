@@ -25,3 +25,8 @@ variable "ports" {
   description = "(Optional) Mount path from pods to volume"
   default     = []
 }
+
+variable "env_config_maps" {
+  description = "(Optional) List of configmap names that should be included as env vars"
+  default     = []
+}

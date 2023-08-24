@@ -11,8 +11,8 @@ resource "kubernetes_service" "kubernetes_service_module" {
     dynamic "port" {
       for_each = var.ports
       content {
-        port = port.value.port
-        name = port.value.name
+        port        = port.value.port
+        name        = port.value.name
         target_port = can(port.value.target_port) ? port.value.target_port : null
       }
     }

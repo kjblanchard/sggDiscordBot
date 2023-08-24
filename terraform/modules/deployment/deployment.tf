@@ -22,9 +22,6 @@ resource "kubernetes_deployment" "k8s_deployment" {
         container {
           image = "${var.image_name}:${var.image_tag}"
           name  = var.deployment_name
-          #   port {
-          #     container_port = "${var.container_port}"
-          #   }
           dynamic "port" {
             for_each = var.ports
             content {
@@ -39,6 +36,14 @@ resource "kubernetes_deployment" "k8s_deployment" {
               sub_path   = lookup(volume_mount.value, "sub_path", null)
               name       = volume_mount.value.volume_name
               read_only  = lookup(volume_mount.value, "read_only", false)
+            }
+          }
+          dynamic "env_from" {
+            for_each = var.env_config_maps
+            content {
+              config_map_ref {
+                name = env_from.value
+              }
             }
           }
         }
