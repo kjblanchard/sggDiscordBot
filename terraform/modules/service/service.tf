@@ -13,12 +13,19 @@ resource "kubernetes_service" "kubernetes_service_module" {
       content {
         port = port.value.port
         name = port.value.name
+                # Include targetPort only if it exists in port.value
         dynamic "target_port" {
-          for_each = port.value.target_port
+          for_each = can(port.value.target_port) ? [1] : []
           content {
             target_port = port.value.target_port
           }
         }
+        # dynamic "target_port" {
+        #   for_each = port.value.target_port
+        #   content {
+        #     target_port = port.value.target_port
+        #   }
+        # }
       }
     }
     dynamic "port" {
