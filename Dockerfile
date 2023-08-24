@@ -5,7 +5,7 @@ WORKDIR /app
 # Get our go modules so that we can install them
 COPY go.mod go.sum ./
 # Download them
-RUN go mod download
+RUN go mod download && go mod tidy
 # Move the go files here
 ADD ./bin/SupergoonDiscordBot.tgz ./
 # Build it
