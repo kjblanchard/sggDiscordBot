@@ -17,8 +17,9 @@ module "sg_discord_bot_service" {
   service_type     = "ClusterIP"
   ports = [
     {
-      port = 80
-      name = "http"
+      name        = "http"
+      port        = 8090
+      target_port = 80
     }
   ]
 }
