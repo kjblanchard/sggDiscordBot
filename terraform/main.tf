@@ -1,6 +1,6 @@
 module "sg_discord_bot_deployment" {
   source          = "./modules/deployment"
-  image_name      = "enf3rno/sg-discord-bot"
+  image_name      = "enf3rno/supergoon-discord-bot"
   image_tag       = "latest"
   deployment_name = "discord-bot"
   ports = [
