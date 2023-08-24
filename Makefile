@@ -19,7 +19,7 @@ rebuild: clean bindir build
 run:
 	@./$(BINARY_FOLDER_NAME)/$(BINARY_NAME)
 package: clean bindir
-	@tar -czvf $(BINARY_FOLDER_NAME)/$(PACKAGE_FILE_NAME).tgz `find . -name "*.go" -o -name "appsettings.json"`
+	@tar -czvf $(BINARY_FOLDER_NAME)/$(PACKAGE_FILE_NAME).tgz `find . -name "*.go"`
 docker: package
 	@docker image build -f ./Dockerfile -t $(DOCKER_IMAGE_FULL) .
 # publish:

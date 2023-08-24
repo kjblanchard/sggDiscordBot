@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
 	"os"
 )
 
@@ -18,15 +16,9 @@ type appSettings struct {
 }
 
 func initializeAppSettings() {
+	applicationSettings.Token = os.Getenv("DISCORD_BOT_TOKEN")
+	applicationSettings.AppId = os.Getenv("DISCORD_APP_ID")
+	applicationSettings.SupergoonGamesServerId = os.Getenv("DISCORD_SUPERGOON_GUILD_ID")
+	applicationSettings.GithubAccessToken = os.Getenv("GITHUB_ACCESS_TOKEN")
 
-	jsonContent, err := os.ReadFile("appsettings.json")
-	if err != nil {
-		log.Fatal("Error reading JSON file:", err)
-		return
-	}
-	err = json.Unmarshal(jsonContent, &applicationSettings)
-	if err != nil {
-		log.Fatal("Error parsing JSON:", err)
-		return
-	}
 }

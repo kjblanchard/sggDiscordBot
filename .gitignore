@@ -48,4 +48,5 @@ Temporary Items
 *__debug_bin
 .vscode/
 appsettings.json
+env.sh
 
