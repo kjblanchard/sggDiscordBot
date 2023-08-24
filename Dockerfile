@@ -1,5 +1,5 @@
 # Use golang to build the app
-FROM golang:1.19 AS build-stage
+FROM golang:1.21 AS build-stage
 # Make the /app folder and cd into it
 WORKDIR /app
 # Get our go modules so that we can install them
