@@ -4,7 +4,7 @@ locals {
 module "sg_discord_bot_deployment" {
   source          = "./modules/deployment"
   image_name      = "enf3rno/supergoon-discord-bot"
-  image_tag       = "latest"
+  image_tag       = "1"
   deployment_name = "discord-bot"
   env_config_maps = [local.config_map_name]
   ports = [
