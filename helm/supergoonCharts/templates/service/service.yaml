@@ -1,0 +1,25 @@
+# myapp-chart/myapp/templates/service.yaml
+{{- range .Values.services }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .serviceName }}
+spec:
+  selector:
+    app: {{ .serviceSelector }}
+  sessionAffinity: ClientIP
+  ports:
+    {{- range .ports }}
+    - port: {{ .port }}
+      name: {{ .name }}
+      {{- if .targetPort }}
+      targetPort: {{ .targetPort }}
+      {{- end }}
+    {{- end }}
+    {{- range .nodePorts }}
+    - port: {{ .port }}
+      name: {{ .name }}
+      nodePort: {{ .nodePort }}
+    {{- end }}
+  type: {{ .serviceType }}
+{{- end }}

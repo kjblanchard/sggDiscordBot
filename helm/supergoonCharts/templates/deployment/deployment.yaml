@@ -1,0 +1,45 @@
+{{- range .Values.deployments }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .deploymentName }}
+  labels:
+    app: {{ .deploymentName }}
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      app: {{ .deploymentName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .deploymentName }}
+    spec:
+      containers:
+        - name: {{ .deploymentName }}
+          image: {{ .imageName }}:{{ .imageTag }}
+          ports:
+            {{- range .ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+            {{- end }}
+          volumeMounts:
+            {{- range .volumeMounts }}
+            - mountPath: {{ .mountPath }}
+              name: {{ .volumeName }}
+              subPath: {{ .subPath | default "" }}
+              readOnly: {{ .readOnly | default false }}
+            {{- end }}
+          envFrom:
+            {{- range .envConfigMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+      volumes:
+        {{- range .volumeHostPaths }}
+        - name: {{ .volumeName }}
+          hostPath:
+            path: {{ .pathOnNode }}
+            type: {{ .type | default "" }}
+        {{- end }}
+{{- end}}

@@ -1,0 +1,32 @@
+{{- range .Values.cronjobs }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .name }}
+spec:
+  schedule: {{ .schedule | quote }}
+  jobTemplate:
+    metadata:
+      name: {{ .name }}
+    spec:
+      template:
+        metadata:
+          name: {{ .name }}
+        spec:
+          containers:
+            - name: {{ .name }}-{{ .jobName }}
+              image: "{{ .image.repository }}:{{ .image.tag }}"
+              imagePullPolicy: Always
+              env:
+              - name: "USERNAME"
+                  valueFrom:
+                  secretKeyRef:
+                    key:  username
+                    name: {{ .Release.Name }}-auth
+              - name: "PASSWORD"
+                  valueFrom:
+                  secretKeyRef:
+                    key:  password
+                    name: {{ .Release.Name }}-auth
+          restartPolicy: OnFailure
+{{ end }}

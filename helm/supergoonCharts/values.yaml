@@ -1,0 +1,28 @@
+# cronjobs:
+#   -
+#     name: cronjobbro
+#     schedule: '*/5 * * * *' # Define your desired cron schedule
+#     jobName: my-cronjob-job # Define a name for the Job created by the CronJob
+#     image:
+#       repository: my-image-repo
+#       tag: latest
+
+deployments:
+  - deploymentName: discord-bot
+    imageName: "enf3rno/supergoon-discord-bot"
+    imageTag: 1
+    enfConfigMaps: discord-bot-data
+    ports:
+      - containerPort: 80
+        name: "http"
+services:
+  - serviceName: "discord-bot-service"
+    serviceSelector: "discord-bot"
+    serviceType: ClusterIP
+    ports:
+      - name: http
+        port: 8090
+        targetPort: 80
+secrets:
+#   username: kevin
+#   password: blanchard
