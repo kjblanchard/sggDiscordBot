@@ -11,7 +11,8 @@ deployments:
   - deploymentName: discord-bot
     imageName: "enf3rno/supergoon-discord-bot"
     imageTag: 2
-    envConfigMaps: discord-bot-data
+    envConfigMaps:
+      - discord-bot-data
     ports:
       - containerPort: 80
         name: "http"
