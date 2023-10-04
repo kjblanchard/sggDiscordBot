@@ -10,7 +10,7 @@
 deployments:
   - deploymentName: discord-bot
     imageName: "enf3rno/supergoon-discord-bot"
-    imageTag: 1
+    imageTag: 2
     enfConfigMaps: discord-bot-data
     ports:
       - containerPort: 80
