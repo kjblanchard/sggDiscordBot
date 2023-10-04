@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .deploymentName }}
+  name: {{ .deploymentName }}-deployment
   labels:
-    app: {{ .deploymentName }}
+    app: {{ .deploymentName }}-deployment
 spec:
   replicas: {{ .replicas }}
   selector:
     matchLabels:
-      app: {{ .deploymentName }}
+      app: {{ .deploymentName }}-deployment
   template:
     metadata:
       labels:
-        app: {{ .deploymentName }}
+        app: {{ .deploymentName }}-deployment
     spec:
       containers:
-        - name: {{ .deploymentName }}
+        - name: {{ .deploymentName }}-deployment
           image: {{ .imageName }}:{{ .imageTag }}
           ports:
             {{- range .ports }}
