@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/kjblanchard/sggDiscordBot/discord/webhookreactions"
+	"github.com/kjblanchard/sggDiscordBot/discord/webhookReactions"
 )
 
 type PushEventPayload struct {
@@ -68,7 +68,7 @@ func HandleSupergoonGamesDiscordBot(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
 			return
 		}
-		webhookreactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
+		webhookReactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
 
 	}
 

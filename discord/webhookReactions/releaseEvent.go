@@ -1,4 +1,4 @@
-package webhookreactions
+package webhookReactions
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ func PostNewRelease(url string, releaseUrl string, releaseName string, releaseBo
 
 	// Unmarshal the JSON data into the TestEvent struct
 	embed := &discordgo.MessageEmbed{
-		Title:       "Test release (not real)",
+		Title:       "A new release has just appeared",
 		Description: fmt.Sprintf("Check out the release for Supergoon RPG with tag %s\nPlay the emscripten build here https://rpg.supergoon.com", tagName),
 		Color:       0x00ff00, // Green color
 		Fields: []*discordgo.MessageEmbedField{
