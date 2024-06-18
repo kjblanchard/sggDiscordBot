@@ -6,26 +6,26 @@ import (
 )
 
 var (
-	s                      *discordgo.Session
+	S                      *discordgo.Session
 	discordApplicationId   string
 	supergoonGamesServerId string
 )
 
 func InitializeDiscord(token string, appId string, supergoonServerId string) {
-	s, _ = discordgo.New("Bot " + token)
+	S, _ = discordgo.New("Bot " + token)
 	discordApplicationId = appId
 	supergoonGamesServerId = supergoonServerId
 }
 
 func OpenDiscordWebsocketConnection() {
-	err := s.Open()
+	err := S.Open()
 	if err != nil {
 		log.Fatal("Error Opening websocket connection for discord bot!\nError: ", err)
 	}
 }
 
 func CloseDiscord() {
-	err := s.Close()
+	err := S.Close()
 	if err != nil {
 		log.Fatal("Error Closing bot", err)
 	}

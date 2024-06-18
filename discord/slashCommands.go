@@ -9,9 +9,9 @@ import (
 
 func AddAllSlashCommands() {
 	var allApplicationCommands []*discordgo.ApplicationCommand
-	allApplicationCommands = slashCommands.AddHelloWorldSlashCommand(s, allApplicationCommands)
-	allApplicationCommands = slashCommands.AddCheckReposSlashCommand(s, allApplicationCommands)
-	_, err := s.ApplicationCommandBulkOverwrite(discordApplicationId, supergoonGamesServerId, allApplicationCommands)
+	allApplicationCommands = slashCommands.AddHelloWorldSlashCommand(S, allApplicationCommands)
+	allApplicationCommands = slashCommands.AddCheckReposSlashCommand(S, allApplicationCommands)
+	_, err := S.ApplicationCommandBulkOverwrite(discordApplicationId, supergoonGamesServerId, allApplicationCommands)
 	if err != nil {
 		log.Fatal("Error adding application commands", err)
 	}

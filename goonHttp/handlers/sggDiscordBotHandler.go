@@ -1,13 +1,14 @@
 package handlers
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
+	"encoding/json"
+	"io"
+	"net/http"
+
+	"github.com/kjblanchard/sggDiscordBot/discord/webhookreactions"
 )
 
 type PushEventPayload struct {
@@ -16,6 +17,23 @@ type PushEventPayload struct {
 		Name string `json:"name"`
 	} `json:"repository"`
 	// Add other fields as needed based on the event payload
+}
+type ReleaseEventPayload struct {
+	Release struct {
+		URL         string `json:"url"`
+		AssetsURL   string `json:"assets_url"`
+		UploadURL   string `json:"upload_url"`
+		HTMLURL     string `json:"html_url"`
+		ID          int    `json:"id"`
+		TagName     string `json:"tag_name"`
+		Name        string `json:"name"`
+		CreatedAt   string `json:"created_at"`
+		PublishedAt string `json:"published_at"`
+		Body        string `json:"body"`
+	} `json:"release"`
+	Repository struct {
+		Url string `json:"html_url"`
+	} `json:"repository"`
 }
 
 const secret = "kevinb"
@@ -42,15 +60,17 @@ func HandleSupergoonGamesDiscordBot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Parse the JSON payload into a struct
-	var payload PushEventPayload
-	if err := json.Unmarshal(body, &payload); err != nil {
-		http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
-		return
-	}
+	eventType := r.Header.Get("X-GitHub-Event")
+	if eventType == "release" {
+		// We should handle the release and deploy it
+		var payload ReleaseEventPayload
+		if err := json.Unmarshal(body, &payload); err != nil {
+			http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
+			return
+		}
+		webhookreactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
 
-	// Process the payload data
-	fmt.Printf("Received push event on repository %s, ref: %s\n", payload.Repository.Name, payload.Ref)
+	}
 
 	// Respond with a success status
 	w.WriteHeader(http.StatusOK)
