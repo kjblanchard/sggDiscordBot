@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
@@ -50,6 +51,7 @@ func HandleSupergoonGamesDiscordBot(w http.ResponseWriter, r *http.Request) {
 	// Read the request body
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		log.Print("Failed to read request body?");
 		http.Error(w, "Failed to read request body", http.StatusInternalServerError)
 		return
 	}
@@ -57,6 +59,7 @@ func HandleSupergoonGamesDiscordBot(w http.ResponseWriter, r *http.Request) {
 	// Verify the payload signature
 	signature := r.Header.Get("X-Hub-Signature")
 	if !verifySignature(signature, body) {
+		log.Print("Invalid signature");
 		http.Error(w, "Invalid signature", http.StatusUnauthorized)
 		return
 	}
