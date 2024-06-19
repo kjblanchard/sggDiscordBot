@@ -42,6 +42,10 @@ func AddCheckReposSlashCommand(session *discordgo.Session, commands []*discordgo
 				log.Print("Error responding! ", err)
 			}
 		} else {
+			startNumber := 0
+			if option, ok := getOptionValue(data.Options, "start-number"); ok {
+				startNumber = int(option.IntValue())
+			}
 			err := s.InteractionRespond(
 				i.Interaction,
 				&discordgo.InteractionResponse{
@@ -51,28 +55,50 @@ func AddCheckReposSlashCommand(session *discordgo.Session, commands []*discordgo
 			if err != nil {
 				log.Print("Error defering", err)
 			}
-			go getReposAndRespondToInteraction(i.Interaction, session)
+			go getReposAndRespondToInteraction(i.Interaction, session, startNumber)
 		}
 	})
+
 	command := &discordgo.ApplicationCommand{
 		Name:        "check-repos",
-		Description: "Checks to see all of the repos available",
+		Description: "Gets a list of 10 of the repos by kjb, starting at the first",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Name:        "start-number",
+				Description: "The number to start listing repositories from",
+				Type:        discordgo.ApplicationCommandOptionInteger,
+				Required:    false,
+			},
+		},
 	}
 	return append(commands, command)
 }
 
-func getReposAndRespondToInteraction(interaction *discordgo.Interaction, session *discordgo.Session) {
+func getOptionValue(options []*discordgo.ApplicationCommandInteractionDataOption, name string) (*discordgo.ApplicationCommandInteractionDataOption, bool) {
+	for _, option := range options {
+		if option.Name == name {
+			return option, true
+		}
+	}
+	return nil, false
+}
+
+func getReposAndRespondToInteraction(interaction *discordgo.Interaction, session *discordgo.Session, startNumber int) {
 	repos := goonGithub.GetAllRepos()
 	field := []*discordgo.MessageEmbedField{}
-	for _, repo := range repos {
+	start := startNumber
+	end := start + 10
+
+	for i := start; i < end; i++ {
+		repo := repos[i]
 		newField := &discordgo.MessageEmbedField{
 			Name:  *repo.Name,
 			Value: *repo.DefaultBranch,
 		}
 		field = append(field, newField)
 	}
-
-	content := "Heres a list of all the Repos!"
+	// }
+	content := "Heres a list of 10 the Repos!"
 	embed := &discordgo.MessageEmbed{
 		Title:  "Repos",
 		Fields: field,
