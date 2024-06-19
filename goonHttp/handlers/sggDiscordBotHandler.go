@@ -19,6 +19,7 @@ type PushEventPayload struct {
 	// Add other fields as needed based on the event payload
 }
 type ReleaseEventPayload struct {
+	Action  string `json:"action"`
 	Release struct {
 		URL         string `json:"url"`
 		AssetsURL   string `json:"assets_url"`
@@ -68,7 +69,9 @@ func HandleSupergoonGamesDiscordBot(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
 			return
 		}
-		webhookReactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
+		if payload.Action == "published" {
+			webhookReactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
+		}
 
 	}
 

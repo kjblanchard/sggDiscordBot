@@ -53,7 +53,7 @@ func PostNewRelease(url string, releaseUrl string, releaseName string, releaseBo
 	}
 
 	// Send the embed message to the specified channel
-	_, err := discord.S.ChannelMessageSendEmbed("907055137179201600", embed)
+	_, err := discord.S.ChannelMessageSendEmbed(rpgNotificationsChannelId, embed)
 	if err != nil {
 		fmt.Println("Error sending message,", err)
 		return
