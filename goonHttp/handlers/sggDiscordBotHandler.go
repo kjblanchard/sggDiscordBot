@@ -4,11 +4,11 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
-	"encoding/json"
+	_ "encoding/json"
 	"io"
 	"net/http"
 
-	"github.com/kjblanchard/sggDiscordBot/discord/webhookReactions"
+	_ "github.com/kjblanchard/sggDiscordBot/discord/webhookReactions"
 )
 
 type PushEventPayload struct {
