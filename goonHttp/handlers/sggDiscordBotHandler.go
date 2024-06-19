@@ -61,19 +61,19 @@ func HandleSupergoonGamesDiscordBot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	eventType := r.Header.Get("X-GitHub-Event")
-	if eventType == "release" {
-		// We should handle the release and deploy it
-		var payload ReleaseEventPayload
-		if err := json.Unmarshal(body, &payload); err != nil {
-			http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
-			return
-		}
-		if payload.Action == "published" {
-			webhookReactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
-		}
+	// eventType := r.Header.Get("X-GitHub-Event")
+	// if eventType == "release" {
+	// 	// We should handle the release and deploy it
+	// 	var payload ReleaseEventPayload
+	// 	if err := json.Unmarshal(body, &payload); err != nil {
+	// 		http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
+	// 		return
+	// 	}
+	// 	if payload.Action == "published" {
+	// 		webhookReactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
+	// 	}
 
-	}
+	// }
 
 	// Respond with a success status
 	w.WriteHeader(http.StatusOK)
