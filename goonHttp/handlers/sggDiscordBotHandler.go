@@ -1,15 +1,14 @@
 package handlers
 
 import (
-	"log"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
-	_ "encoding/json"
+	"encoding/json"
+	"github.com/kjblanchard/sggDiscordBot/discord/webhookReactions"
 	"io"
+	"log"
 	"net/http"
-
-	_ "github.com/kjblanchard/sggDiscordBot/discord/webhookReactions"
 )
 
 type PushEventPayload struct {
@@ -51,7 +50,7 @@ func HandleSupergoonGamesDiscordBot(w http.ResponseWriter, r *http.Request) {
 	// Read the request body
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Print("Failed to read request body?");
+		log.Print("Failed to read request body?")
 		http.Error(w, "Failed to read request body", http.StatusInternalServerError)
 		return
 	}
@@ -59,24 +58,24 @@ func HandleSupergoonGamesDiscordBot(w http.ResponseWriter, r *http.Request) {
 	// Verify the payload signature
 	signature := r.Header.Get("X-Hub-Signature")
 	if !verifySignature(signature, body) {
-		log.Print("Invalid signature");
+		log.Print("Invalid signature")
 		http.Error(w, "Invalid signature", http.StatusUnauthorized)
 		return
 	}
 
-	// eventType := r.Header.Get("X-GitHub-Event")
-	// if eventType == "release" {
-	// 	// We should handle the release and deploy it
-	// 	var payload ReleaseEventPayload
-	// 	if err := json.Unmarshal(body, &payload); err != nil {
-	// 		http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
-	// 		return
-	// 	}
-	// 	if payload.Action == "published" {
-	// 		webhookReactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
-	// 	}
+	eventType := r.Header.Get("X-GitHub-Event")
+	if eventType == "release" {
+		// We should handle the release and deploy it
+		var payload ReleaseEventPayload
+		if err := json.Unmarshal(body, &payload); err != nil {
+			http.Error(w, "Failed to parse JSON payload", http.StatusBadRequest)
+			return
+		}
+		if payload.Action == "published" {
+			webhookReactions.PostNewRelease(payload.Repository.Url, payload.Release.HTMLURL, payload.Release.Name, payload.Release.Body, payload.Release.TagName)
+		}
 
-	// }
+	}
 
 	// Respond with a success status
 	w.WriteHeader(http.StatusOK)
