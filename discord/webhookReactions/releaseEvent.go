@@ -11,7 +11,7 @@ func PostNewRelease(url string, releaseUrl string, releaseName string, releaseBo
 	// Unmarshal the JSON data into the TestEvent struct
 	embed := &discordgo.MessageEmbed{
 		Title:       "A new release has just appeared",
-		Description: fmt.Sprintf("Check out the release for Supergoon RPG with tag %s\nPlay the emscripten build here https://rpg.supergoon.com", tagName),
+		Description: fmt.Sprintf("Check out the release for Supergoon RPG with tag %s\nPlay the emscripten build here https://escapethefate.supergoon.com", tagName),
 		Color:       0x00ff00, // Green color
 		Fields: []*discordgo.MessageEmbedField{
 			{
