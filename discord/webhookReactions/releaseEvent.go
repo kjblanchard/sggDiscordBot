@@ -8,45 +8,34 @@ import (
 
 func PostNewRelease(url string, releaseUrl string, releaseName string, releaseBody string, tagName string) {
 
-	// Unmarshal the JSON data into the TestEvent struct
 	embed := &discordgo.MessageEmbed{
-		Title:       "A new release has just appeared",
-		Description: fmt.Sprintf("Check out the release for Supergoon RPG with tag %s\nPlay the emscripten build here https://escapethefate.supergoon.com", tagName),
+		Title:       "A new release has just been posted",
+		Description: fmt.Sprintf("Check out the latest release for Supergoon RPG with tag %s\nPlay the emscripten build here https://escapethefate.supergoon.com or the dev build here https://escapethefate-dev.supergoon.com", tagName),
 		Color:       0x00ff00, // Green color
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name: "Release URL (downloads and notes)",
-				// Value:  testEvent.Release.HTMLURL,
 				Value:  releaseUrl,
 				Inline: true,
 			},
 			{
 				Name: "Name",
-				// Value:  testEvent.Release.Name,
 				Value:  releaseName,
 				Inline: true,
 			},
 			{
 				Name: "Release Body",
-				// Value:  testEvent.Release.Body,
 				Value:  releaseBody,
 				Inline: false,
 			},
 			{
 				Name: "Repository Url",
-				// Value:  testEvent.Repository.Url,
 				Value:  url,
 				Inline: false,
 			},
 			{
-				Name: "Post issues here!",
-				// Value:  fmt.Sprintf("%s/issues", testEvent.Repository.Url),
+				Name: "Post issues here.",
 				Value:  fmt.Sprintf("%s/issues", url),
-				Inline: false,
-			},
-			{
-				Name:   "Project board with upcoming work and such",
-				Value:  "https://github.com/users/kjblanchard/projects/11",
 				Inline: false,
 			},
 		},
