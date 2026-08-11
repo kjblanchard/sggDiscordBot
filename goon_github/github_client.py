@@ -1,6 +1,6 @@
 from github import Github
 
-github_client: Github = None
+github_client: Github | None = None
 
 
 def initialize_github(token: str):

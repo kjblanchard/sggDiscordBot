@@ -6,7 +6,7 @@ from discord_bot.webhook_reactions.reactions import RPG_NOTIFICATIONS_CHANNEL_ID
 
 log = logging.getLogger(__name__)
 
-bot_instance: discord.Client = None
+bot_instance: discord.Client | None = None
 
 
 def set_bot_instance(bot: discord.Client):
@@ -15,8 +15,11 @@ def set_bot_instance(bot: discord.Client):
 
 
 async def post_new_release(url: str, release_url: str, release_name: str, release_body: str, tag_name: str):
+    if bot_instance is None:
+        log.error("Bot instance not set")
+        return
     channel = bot_instance.get_channel(int(RPG_NOTIFICATIONS_CHANNEL_ID))
-    if channel is None:
+    if not isinstance(channel, discord.TextChannel):
         log.error("Could not find RPG notifications channel")
         return
 

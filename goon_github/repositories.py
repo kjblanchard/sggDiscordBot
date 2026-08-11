@@ -8,6 +8,9 @@ log = logging.getLogger(__name__)
 
 
 def get_all_repos() -> list[Repository]:
+    if github_client is None:
+        log.error("GitHub client not initialized")
+        return []
     try:
         repos = list(github_client.get_user("kjblanchard").get_repos())
         return repos
