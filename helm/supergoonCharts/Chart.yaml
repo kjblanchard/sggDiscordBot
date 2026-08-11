@@ -1,4 +1,0 @@
-apiVersion: v2
-name: supergoonCharts
-description: Templates for various kubernetes resources.
-version: 0.1.0

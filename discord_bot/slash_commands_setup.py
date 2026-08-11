@@ -9,8 +9,8 @@ from discord_bot.discord_bot import supergoon_games_server_id
 log = logging.getLogger(__name__)
 
 
-def add_all_slash_commands(bot: discord.Client):
-    guild = discord.Object(id=int(supergoon_games_server_id))
+def add_all_slash_commands(bot: discord.Client, server_id):
+    guild = discord.Object(id=int(server_id))
     add_hello_world_slash_command(bot, guild)
     add_check_repos_slash_command(bot, guild)
 

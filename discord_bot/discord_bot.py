@@ -13,12 +13,14 @@ def initialize_discord(token: str, app_id: str, supergoon_server_id: str) -> dis
     global discord_application_id, supergoon_games_server_id
     discord_application_id = app_id
     supergoon_games_server_id = supergoon_server_id
-
     intents = discord.Intents.default()
     bot = discord.Client(intents=intents)
     bot.tree = app_commands.CommandTree(bot)
     bot.token_value = token
     return bot
+
+def get_supergoon_games_server_id():
+    return supergoon_games_server_id
 
 
 async def open_discord_connection(bot: discord.Client):

@@ -1,20 +1,12 @@
-# Use golang to build the app
-FROM golang:1.21 AS build-stage
-# Make the /app folder and cd into it
-WORKDIR /app
-# Get our go modules so that we can install them
-COPY go.mod go.sum ./
-# Download them
-RUN go mod download
-# Move the go files here
-ADD ./bin/SupergoonDiscordBot.tgz ./
-# Build it
-RUN CGO_ENABLED=0 GOOS=linux go build -o /discordBot
+FROM python:3.12-slim
 
-# Deploy the application binary into a lean image
-FROM gcr.io/distroless/base-debian11 AS build-release-stage
 WORKDIR /app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
 EXPOSE 80
-COPY --from=build-stage /discordBot  /app
-# EXPOSE 8000
-ENTRYPOINT ["/app/discordBot"]
+
+ENTRYPOINT ["python", "main.py"]

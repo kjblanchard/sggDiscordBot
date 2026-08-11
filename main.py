@@ -3,7 +3,7 @@ import logging
 import signal
 
 from appsettings import initialize_app_settings, application_settings
-from discord_bot.discord_bot import initialize_discord, open_discord_connection, close_discord
+from discord_bot.discord_bot import initialize_discord, open_discord_connection, close_discord, get_supergoon_games_server_id
 from discord_bot.slash_commands_setup import add_all_slash_commands
 from goon_github.github_client import initialize_github
 from goon_http.goon_http import start_server
@@ -20,7 +20,7 @@ async def main():
         application_settings.supergoon_games_server_id,
     )
     initialize_github(application_settings.github_access_token)
-    add_all_slash_commands(bot)
+    add_all_slash_commands(bot, get_supergoon_games_server_id())
 
     loop = asyncio.get_event_loop()
     stop = loop.create_future()
