@@ -1,9 +1,11 @@
+import asyncio
 import hashlib
 import hmac
 import logging
 
 from flask import Blueprint, request, abort
 
+from discord_bot.discord_bot import get_current_bot
 from discord_bot.webhook_reactions.release_event import post_new_release
 from discord_bot.webhook_reactions.issue_event import handle_issue_event
 
@@ -24,25 +26,27 @@ def handle_supergoon_games_discord_bot():
         abort(401)
 
     event_type = request.headers.get("X-GitHub-Event", "")
+    bot = get_current_bot()
+    loop = bot.loop
+
     if event_type == "release":
         payload = request.get_json()
         if payload.get("action") == "published":
             release = payload["release"]
             repository = payload["repository"]
-            import asyncio
-            asyncio.run(
+            asyncio.run_coroutine_threadsafe(
                 post_new_release(
                     repository["html_url"],
                     release["html_url"],
                     release["name"],
                     release["body"],
                     release["tag_name"],
-                )
-            )
+                ),
+                loop,
+            ).result(timeout=10)
     elif event_type == "issues":
         payload = request.get_json()
-        import asyncio
-        asyncio.run(handle_issue_event(payload))
+        asyncio.run_coroutine_threadsafe(handle_issue_event(payload), loop).result(timeout=10)
 
     return "", 200
 
