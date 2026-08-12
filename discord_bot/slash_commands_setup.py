@@ -9,12 +9,14 @@ from discord_bot.discord_bot import SggBot
 log = logging.getLogger(__name__)
 
 
-def add_all_slash_commands(bot: SggBot, server_id):
-    guild = discord.Object(id=int(server_id))
+def add_all_slash_commands(bot: SggBot):
+    guild = discord.Object(id=int(bot.server_id))
     add_hello_world_slash_command(bot, guild)
     add_check_repos_slash_command(bot, guild)
 
     @bot.event
-    async def on_ready():  # pyright: ignore[reportUnusedFunction]
+    async def on_ready():
         await bot.tree.sync(guild=guild)
         log.info("Slash commands synced")
+
+    _ = on_ready  # get rid of pyright complaining

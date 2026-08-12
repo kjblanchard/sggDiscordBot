@@ -1,5 +1,4 @@
 import logging
-
 import discord
 
 from discord_bot.webhook_reactions.reactions import RPG_NOTIFICATIONS_CHANNEL_ID

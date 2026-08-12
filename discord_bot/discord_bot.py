@@ -5,26 +5,26 @@ from discord.ext import commands
 
 log = logging.getLogger(__name__)
 
-discord_application_id = ""
-supergoon_games_server_id = ""
-
 
 class SggBot(commands.Bot):
-    def __init__(self, token_value: str, **kwargs):
+    def __init__(self, token_value: str, server_id: str, app_id: str, **kwargs):
+        "Pass all unknown params to the actual discord bot, and then assign the rest to our class"
         super().__init__(**kwargs)
         self.token_value = token_value
+        self.server_id = server_id
+        self.app_id = app_id
 
+bot_instance: SggBot 
 
 def initialize_discord(token: str, app_id: str, supergoon_server_id: str) -> SggBot:
-    global discord_application_id, supergoon_games_server_id
-    discord_application_id = app_id
-    supergoon_games_server_id = supergoon_server_id
     intents = discord.Intents.default()
-    bot = SggBot(token_value=token, command_prefix="!", intents=intents)
-    return bot
+    bot = SggBot(token_value=token, server_id=supergoon_server_id, app_id=app_id, command_prefix="!", intents=intents)
+    global bot_instance
+    bot_instance = bot
+    return bot_instance
 
-def get_supergoon_games_server_id():
-    return supergoon_games_server_id
+def get_current_bot() -> SggBot:
+    return bot_instance
 
 
 async def open_discord_connection(bot: SggBot):

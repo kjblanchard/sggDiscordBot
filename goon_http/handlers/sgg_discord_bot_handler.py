@@ -5,6 +5,7 @@ import logging
 from flask import Blueprint, request, abort
 
 from discord_bot.webhook_reactions.release_event import post_new_release
+from discord_bot.webhook_reactions.issue_event import handle_issue_event
 
 log = logging.getLogger(__name__)
 
@@ -29,13 +30,19 @@ def handle_supergoon_games_discord_bot():
             release = payload["release"]
             repository = payload["repository"]
             import asyncio
-            asyncio.run(post_new_release(
-                repository["html_url"],
-                release["html_url"],
-                release["name"],
-                release["body"],
-                release["tag_name"],
-            ))
+            asyncio.run(
+                post_new_release(
+                    repository["html_url"],
+                    release["html_url"],
+                    release["name"],
+                    release["body"],
+                    release["tag_name"],
+                )
+            )
+    elif event_type == "issues":
+        payload = request.get_json()
+        import asyncio
+        asyncio.run(handle_issue_event(payload))
 
     return "", 200
 
