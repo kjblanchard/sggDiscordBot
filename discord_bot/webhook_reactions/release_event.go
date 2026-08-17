@@ -18,7 +18,7 @@ func PostNewRelease(url string, releaseURL string, releaseName string, releaseBo
 
 	embed := &discordgo.MessageEmbed{
 		Title:       "A new release has just been posted",
-		Description: fmt.Sprintf("Check out the latest release for Supergoon RPG with tag %s\nPlay the emscripten build here https://escapethefate.supergoon.com or the dev build here https://escapethefate-dev.supergoon.com", tagName),
+		Description: fmt.Sprintf("Check out the latest release for Supergoon RPG with tag %s\nPlay the emscripten build here https://escapethefate-dev.supergoon.com", tagName),
 		Color:       0x00FF00,
 		Fields: []*discordgo.MessageEmbedField{
 			{Name: "Release URL (downloads and notes)", Value: releaseURL, Inline: true},
